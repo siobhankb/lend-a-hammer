@@ -1,10 +1,12 @@
-from app import app
-from datetime import datetime
+from app import db, login
+from datetime import datetime, timedelta
+import base64
+import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
-    _id = db.Column(db.Integer, primary_key=true)
+    _id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
@@ -54,24 +56,24 @@ class User(db.Model):
         return data
 
 class Lender(db.Model):
-    lender_id = db.Column(db.Integer, primary_key=true)
+    lender_id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow)
     lender_rating = db.Column(db.Numeric(2,1))
     # <-- this is how to set up a foreign key!!
-    user_id = db.Column(db.Integer, ForeignKey('user._id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user._id'))
 
 
 class Borrower(db.Model):
-    borrower_id = db.Column(db.Integer, primary_key=true)
+    borrower_id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow)
     borrower_rating = db.Column(db.Numeric(2, 1))
     # <-- this is how to set up a foreign key!!
-    user_id = db.Column(db.Integer, ForeignKey('user._id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user._id'))
 
 class Tool(db.Model):
-    tool_id = db.Column(db.Integer, primary_key=true)
+    tool_id = db.Column(db.Integer, primary_key=True)
     tool_name = db.Column(db.String(50), nullable=False)
     tool_cat = db.Column(db.Integer, nullable=False)
 

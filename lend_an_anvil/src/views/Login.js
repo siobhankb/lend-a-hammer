@@ -88,7 +88,7 @@ export default function Login(props) {
               </div>
               <div className="row mb-3">
                 <label
-                  for="registerHoriz"
+                  htmlFor="registerHoriz"
                   className="col-4 col-form-label fs-6 align-middle text-end"
                 >
                   <small>No Account Yet?</small>
@@ -104,7 +104,7 @@ export default function Login(props) {
                     className="form-control fw-bold fs-6 text-center align-middle border-0"
                     id="registerHoriz"
                     value="Register to Lend or Borrow Tools"
-                    readonly
+                    readOnly
                   />
                 </div>
                 {/* <div className="row">
@@ -117,7 +117,7 @@ export default function Login(props) {
                       type="text"
                       name="register"
                       value="Register to Lend or Borrow Tools"
-                      readonly
+                      readOnly
                     ></input>
                   </div>
                 </div> */}

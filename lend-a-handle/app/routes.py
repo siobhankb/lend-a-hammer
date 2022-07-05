@@ -21,7 +21,7 @@ def create_user():
     if User.query.filter_by(email=user_email).first() is not None:
         return jsonify({'error': f"User with email '{user_email}' already exists"}), 400
     new_user = User(**data)
-    return jsonify(new_user)
+    return jsonify(new_user.to_dict())
 
 # Get user from token
 @app.route('/user-info', methods=['GET'])

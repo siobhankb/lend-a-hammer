@@ -62,7 +62,7 @@ const handleFormSubmit = (e) => {
                 className="form-control form-control-lg fw-bold text-center border-0 mt-5"
                 type="text"
                 value="Register to Lend or Borrow Tools"
-                readonly
+                readOnly
               ></input>
               <label htmlFor="fname">First Name</label>
               <input

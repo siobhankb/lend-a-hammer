@@ -40,10 +40,21 @@ class User(UserMixin, db.Model):
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,
-            'zip_code': self.zip_code,
-            'lender': self.lender.to_dict(),
-            'borrower': self.borrower.to_dict()
+            'zip_code': self.zip_code
         }
+        user_lender = Lender.query.filter(Lender.user_id == str(self.id)).first()
+        if user_lender:
+            lend_dict = user_lender.to_dict()
+            data['lender'] = lend_dict
+        else:
+            data['lender'] = {}
+        user_borrower = Borrower.query.filter(
+            Borrower.user_id == str(self.id)).first()
+        if user_borrower:
+            borrow_dict = user_borrower.to_dict()
+            data['borrower'] = borrow_dict
+        else:
+            data['borrower'] = {}
         return data
 
     def check_password(self, password):

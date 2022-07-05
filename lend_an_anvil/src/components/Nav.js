@@ -12,7 +12,7 @@ export default function Nav(props) {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
-          {props.brand}
+          <strong>{props.brand}</strong>
         </Link>
         <button
           className="navbar-toggler"
@@ -26,38 +26,37 @@ export default function Nav(props) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div className="navbar-nav">
-            <Link className="nav-link active" aria-current="page" to="/">
-              Home
-            </Link>
+          <div className="navbar-nav ms-right">
             {props.loggedIn ? (
-              <>
-                <Link className="nav-link" to="/" onClick={props.logout}>
-                  Logout
-                </Link>
-                <Link className="nav-link" to="/create-post">
-                  Create Post
-                </Link>
-              </>
-            ) : (
-              <Link className="nav-link" to="/login">
-                Login
+            <>
+              <Link className="nav-link" to="/profile">
+                Profile
               </Link>
-            )}
-            {props.isLender ? (
-              <>
+              <Link className="nav-link" to="/" onClick={props.logUserOut}>
+                Logout
+              </Link>
+            </>
+             ) : ( 
+            <Link className="nav-link" to="/login">
+              Login
+            </Link>
+             )} 
+          </div>
+          <div className="navbar-nav">
+            {/* {props.isLender ? ( */}
+            {/* <>
                 <Link className="nav-link" to="/my-tools">
                   My Tools
                 </Link>
-              </>
-            ) : null}
-            {props.isBorrower ? (
-              <>
+              </> */}
+            {/* ) : null}
+            {props.isBorrower ? ( */}
+            {/* <>
                 <Link className="nav-link" to="/my-reservations">
                   My Reservations
                 </Link>
-              </>
-            ) : null}
+              </> */}
+            {/* ) : null} */}
           </div>
         </div>
       </div>

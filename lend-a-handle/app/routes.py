@@ -21,10 +21,10 @@ def create_user():
     if User.query.filter_by(email=user_email).first() is not None:
         return jsonify({'error': f"User with email '{user_email}' already exists"}), 400
     new_user = User(**data)
-    return jsonify(new_user.to_dict())
+    return jsonify(new_user)
 
 # Get user from token
-@app.route('/user-info')
+@app.route('/user-info', methods=['GET'])
 @token_auth.login_required
 def user_info():
     return token_auth.current_user().to_dict()
@@ -47,7 +47,7 @@ def get_user(user_id):
 
 # create lender
 @app.route('/users/lenders', methods=['POST'])
-# @token_auth.login_required
+@token_auth.login_required
 def create_lender():
     data = request.json
     current_user = token_auth.current_user()

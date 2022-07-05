@@ -41,8 +41,8 @@ class User(UserMixin, db.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'zip_code': self.zip_code,
-            'lender': self.lender,
-            'borrower': self.borrower
+            'lender': self.lender.to_dict(),
+            'borrower': self.borrower.to_dict()
         }
         return data
 
@@ -113,7 +113,7 @@ class Lender(db.Model):
         db.DateTime, nullable=False, default=datetime.utcnow)
 
     exchange_location = db.Column(db.String(200), nullable=False)
-    lender_rating = db.Column(db.Numeric(2,1))
+    lender_rating = db.Column(db.Numeric(2,1), default=0)
     # <-- this is how to set up a foreign key!!
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     tools = db.relationship('Tool', backref='owner')
@@ -136,7 +136,7 @@ class Borrower(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow)
-    borrower_rating = db.Column(db.Numeric(2, 1))
+    borrower_rating = db.Column(db.Numeric(2, 1), default=0)
     # <-- this is how to set up a foreign key!!
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     loans = db.relationship('loanTool', backref='loan_records')
@@ -158,7 +158,7 @@ class Borrower(db.Model):
 class Tool(db.Model):
     __tablename__ = 'tool'
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey('lender.id'), nullable=False)
+    lender_id = db.Column(db.Integer, db.ForeignKey('lender.id'), nullable=False)
     tool_name = db.Column(db.String(50), nullable=False)
     tool_descr = db.Column(db.String(200), nullable=False)
     category = db.Column(db.Integer, nullable=False)
@@ -177,7 +177,7 @@ class Tool(db.Model):
     def to_dict(self):
         data = {
             'tool_id': self.id,
-            'owner_id': self.owner_id,
+            'lender_id': self.owner_id,
             'tool_name': self.tool_name,
             'tool_descr': self.tool_descr,
             'tool_cat': self.tool_cat,

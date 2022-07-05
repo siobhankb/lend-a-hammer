@@ -7,6 +7,10 @@ import React from 'react'
 
 export default function Home() {
   return (
-    <div>Home</div>
-  )
+    <>
+      <div className='container' >
+        <h2>Home - Lend a Hammer</h2>
+      </div>
+    </>
+  );
 }

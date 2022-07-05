@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 70a920cce210
+Revision ID: 4191f806f308
 Revises: 
-Create Date: 2022-07-04 16:53:58.749351
+Create Date: 2022-07-04 19:32:20.157446
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '70a920cce210'
+revision = '4191f806f308'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,7 +34,6 @@ def upgrade():
     sa.Column('first_name', sa.String(length=50), nullable=False),
     sa.Column('last_name', sa.String(length=50), nullable=False),
     sa.Column('zip_code', sa.Numeric(precision=5, scale=0), nullable=False),
-    sa.Column('exchange_location', sa.String(length=200), nullable=False),
     sa.Column('token', sa.String(length=32), nullable=True),
     sa.Column('token_expiration', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
@@ -45,15 +44,16 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date_created', sa.DateTime(), nullable=False),
     sa.Column('borrower_rating', sa.Numeric(precision=2, scale=1), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('lender',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('date_created', sa.DateTime(), nullable=False),
+    sa.Column('exchange_location', sa.String(length=200), nullable=False),
     sa.Column('lender_rating', sa.Numeric(precision=2, scale=1), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -64,7 +64,7 @@ def upgrade():
     sa.Column('tool_descr', sa.String(length=200), nullable=False),
     sa.Column('category', sa.Integer(), nullable=False),
     sa.Column('available', sa.Boolean(), nullable=False),
-    sa.ForeignKeyConstraint(['owner_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['owner_id'], ['lender.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('tool_loans',

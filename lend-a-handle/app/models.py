@@ -1,4 +1,3 @@
-from email.policy import default
 import os
 from datetime import datetime, timedelta
 import base64
@@ -18,10 +17,10 @@ class User(UserMixin, db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     zip_code = db.Column(db.Numeric(5, 0), nullable=False)
-    exchange_location = db.Column(db.String(200), nullable=False)
     # <-- this is how to set up a foreign key!!
-    lender = db.relationship('Lender', backref='lender', lazy=True)
-    borrower = db.relationship('Borrower', backref='borrower', lazy=True)
+    lender = db.relationship('Lender', backref='lender')
+    borrower = db.relationship(
+        'Borrower', backref='borrower')
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
 
@@ -42,14 +41,10 @@ class User(UserMixin, db.Model):
             'first_name': self.first_name,
             'last_name': self.last_name,
             'zip_code': self.zip_code,
-            'exchange_location': self.exchange_location,
             'lender': self.lender,
             'borrower': self.borrower
         }
         return data
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -116,9 +111,11 @@ class Lender(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date_created = db.Column(
         db.DateTime, nullable=False, default=datetime.utcnow)
+
+    exchange_location = db.Column(db.String(200), nullable=False)
     lender_rating = db.Column(db.Numeric(2,1))
     # <-- this is how to set up a foreign key!!
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
     tools = db.relationship('Tool', backref='owner')
 
     def __init__(self, **kwargs):
@@ -141,8 +138,8 @@ class Borrower(db.Model):
         db.DateTime, nullable=False, default=datetime.utcnow)
     borrower_rating = db.Column(db.Numeric(2, 1))
     # <-- this is how to set up a foreign key!!
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    loans = db.relationship('tool_loans', backref='loan_records', lazy=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    loans = db.relationship('loanTool', backref='loan_records')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -161,12 +158,12 @@ class Borrower(db.Model):
 class Tool(db.Model):
     __tablename__ = 'tool'
     id = db.Column(db.Integer, primary_key=True)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey('lender.id'), nullable=False)
     tool_name = db.Column(db.String(50), nullable=False)
     tool_descr = db.Column(db.String(200), nullable=False)
     category = db.Column(db.Integer, nullable=False)
     available = db.Column(db.Boolean, nullable=False)
-    loans = db.relationship('tool_loans', backref='loans', lazy=True)
+    loans = db.relationship('loanTool', backref='loans')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -207,8 +204,8 @@ class ToolCategory(db.Model):
     cat_name = db.Column(db.String(50), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey(
         'tool_category.id'), index=True, nullable=True)
-    sub_cat = db.relationship('tool_category', backref=db.backref(
-        'parent', remote_side='tool_category.id'))
+    sub_cat = db.relationship('ToolCategory', backref=db.backref(
+        'parent', remote_side='ToolCategory.id'))
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

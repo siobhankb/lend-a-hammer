@@ -11,16 +11,24 @@ import GetLender from '../components/GetLender';
 import LenderButton from '../components/LenderButton';
 
 export default function Home(props) {
-
-    const [isBorrower, setIsBorrower] = useState();
-    const [borrowerID, setBorrowerID] = useState();
-    const [isLender, setIsLender] = useState();
-    const [lenderID, setLenderID] = useState();
+  const [userID, setUserID] = useState();
+  const [isBorrower, setIsBorrower] = useState();
+  const [borrowerID, setBorrowerID] = useState();
+  const [borrowerRating, setBorrowerRating] = useState();
+  const [isLender, setIsLender] = useState();
+  const [lenderID, setLenderID] = useState();
     
-    let navigate = useNavigate();  
+  let navigate = useNavigate();  
+  
+  let myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/user-info")
+    fetch("http://127.0.0.1:5000/user-info", {
+      method: 'GET',
+      headers: myHeaders
+    })
       .then((res) => {
         if (res.ok) {
           console.log("home res = ok");
@@ -35,10 +43,11 @@ export default function Home(props) {
       .then((data) => {
         console.log("data=", data);
         if (data) {
+          setUserID(data.id)
           let lender = data.lender;
           console.log("lender=", lender);
-          if (lender) {
-            const lenderID = lender["id"];
+          if (lender != {}) {
+            const lenderID = lender["lender_id"];
             console.log("lenderID=", lenderID);
             setIsLender(true);
             setLenderID(lenderID);
@@ -47,21 +56,20 @@ export default function Home(props) {
             setLenderID("null");
           }
           let borrower = data.borrower;
-          if (borrower) {
-            const borrowerID = borrower["id"];
-            console.log("borrowerID=", borrowerID);
+          if (borrower != {}) {
             setIsBorrower(true);
-            setBorrowerID(borrowerID);
+            setBorrowerID(borrower['borrower_id']);
+            setBorrowerRating(borrower["borrower_rating"]);
           } else {
             setIsBorrower(false);
             setBorrowerID("null");
           }
         }
       });
-  });
+  },[]);
 
   const checkBorrower = () => {
-    if (!isBorrower) {
+    if (isBorrower == false) {
       let myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append(
@@ -73,7 +81,7 @@ export default function Home(props) {
         .then((res) => res.json())
         .then((data) => {
           if (data.error) {
-            flashMessage(data.error, 'danger')
+            props.flashMessage(data.error, 'danger')
           } else {
             setBorrowerID(data.id)
           }
@@ -87,15 +95,20 @@ export default function Home(props) {
       <div className="container">
         <div className="row">
           <h2 className="text-center">Home - Lend a Hammer</h2>
+          <h4 className="text-center"> user ID: {userID} </h4>
         </div>
         <div className="row">
           <div className="col">
-            {isLender ? <GetLender lenderID={lenderID} /> : <LenderButton />}
+            <LenderButton />
+            <GetLender lenderID={lenderID} />
           </div>
           <div className="col">
-            {isBorrower ? <GetBorrower borrowerID={borrowerID} /> : <BorrowerButton />}
+            <BorrowerButton checkBorrower={checkBorrower} />
+            <GetBorrower
+              borrowerID={borrowerID}
+              borrowerRating={borrowerRating}
+            />
           </div>
-          <div className="col">{isLender ? <GetLender /> : null} </div>
         </div>
       </div>
     </>

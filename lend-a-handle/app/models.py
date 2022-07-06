@@ -102,15 +102,15 @@ class User(UserMixin, db.Model):
 
 
 @basic_auth.verify_password
-def verify(email, password):
-    user = User.query.filter_by(email=email).first()
-    if user and user.check_password(password):
+def verify(user_email, user_password):
+    user = User.query.filter_by(email=user_email).first()
+    if user and user.check_password(user_password):
         return user
 
 
 @token_auth.verify_token
-def verify(token):
-    user = User.query.filter_by(token=token).first()
+def verify(user_token):
+    user = User.query.filter_by(token=user_token).first()
     if user and user.token_expiration > datetime.utcnow():
         return user
 # @basic_auth.get_user_roles

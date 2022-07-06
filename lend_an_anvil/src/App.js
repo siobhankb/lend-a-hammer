@@ -19,6 +19,16 @@ function App() {
     const [loggedIn, setLoggedIn] = useState(
       localStorage.getItem("token") ? true : false
     );
+  
+  const loggedInFlag = "loggedIn";
+
+  if (loggedIn) {
+    sessionStorage.setItem(loggedInFlag, "true");
+  } else {
+    sessionStorage.setItem(loggedInFlag, "false");
+  }
+  const pageLoggedIn = sessionStorage.getItem(loggedInFlag);
+  
   let t = localStorage.getItem("token")
   console.log('at top of App token is ', t)
 
@@ -33,10 +43,11 @@ function App() {
   };
 
   const logUserOut = () => {
-      console.log('logUserOut has been called')
-      flashMessage("You have successfully logged out", "warning");
-      localStorage.removeItem("token");
-      setLoggedIn(false);
+    console.log('logUserOut has been called')
+    flashMessage("You have successfully logged out", "warning");
+    localStorage.removeItem("token");
+    sessionStorage.removeItem(loggedInFlag)
+    setLoggedIn(false);
   };
   
   const GetCurrentUser = () => {
@@ -63,7 +74,16 @@ function App() {
           />
         ) : null}
         <Routes>
-          <Route path="/" element={<Home flashMessage={flashMessage} />} />
+          <Route
+            path="/"
+            element={
+              <Home
+                flashMessage={flashMessage}
+                loggedIn={loggedIn}
+                pageLoggedIn={pageLoggedIn}
+              />
+            }
+          />
           <Route
             path="/register"
             element={
@@ -78,7 +98,7 @@ function App() {
           />
           <Route
             path="/borrow"
-            element={<Borrow flashMessage={flashMessage}/>}
+            element={<Borrow flashMessage={flashMessage} />}
           >
             {/* <Route
               path="/borrower:bId/my-reservations"
@@ -87,10 +107,7 @@ function App() {
               }
             /> */}
           </Route>
-          <Route
-            path="/lender"
-            element={<Lend flashMessage={flashMessage}/>}
-          >
+          <Route path="/lender" element={<Lend flashMessage={flashMessage} />}>
             {/* <Route
               path="/lender:lId/my-tools"
               element={

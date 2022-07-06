@@ -60,6 +60,28 @@ export default function Home(props) {
       });
   });
 
+  const checkBorrower = () => {
+    if (!isBorrower) {
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append(
+        "Authorization", `Bearer ${localStorage.getItem('token')}`);
+      fetch("http://127.0.0.1:5000/users/borrowers", {
+        method: 'POST',
+        headers: myHeaders
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            flashMessage(data.error, 'danger')
+          } else {
+            setBorrowerID(data.id)
+          }
+        })
+        .catch((error) => console.log("error", error));
+    }
+}
+
   return (
     <>
       <div className="container">
@@ -68,10 +90,10 @@ export default function Home(props) {
         </div>
         <div className="row">
           <div className="col">
-            {isLender ? <GetLender /> : <LenderButton />}
+            {isLender ? <GetLender lenderID={lenderID} /> : <LenderButton />}
           </div>
           <div className="col">
-            {isBorrower ? <GetBorrower /> : <BorrowerButton />}
+            {isBorrower ? <GetBorrower borrowerID={borrowerID} /> : <BorrowerButton />}
           </div>
           <div className="col">{isLender ? <GetLender /> : null} </div>
         </div>

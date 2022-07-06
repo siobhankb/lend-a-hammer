@@ -9,9 +9,7 @@ export default function LenderButton() {
           <label
             htmlFor="becomeLender"
             className="col-form-label align-middle text-center"
-          >
-            <small>Looking for a Tool?</small>
-          </label>
+          >Ready to Lend Your Tools?</label>
           <div className="col mx-auto">
             <Link
               to="/lender"

@@ -19,10 +19,7 @@ function App() {
       localStorage.getItem("token") ? true : false
     );
   let t = localStorage.getItem("token")
-  console.log('from App top of function:', t);
-
-  const [isBorrower, setIsBorrower] = useState(true);
-  const [isLender, setIsLender] = useState(false);
+  console.log('at top of App token is ', t)
 
     const flashMessage = (message, category) => {
       setMessage(message);
@@ -30,16 +27,14 @@ function App() {
     };
 
   const logUserIn = () => {
-    console.log('from App: logUserIn-->')
     setLoggedIn(true)
     console.log('from App: setLoggedIn=', loggedIn)
   };
 
   const logUserOut = () => {
-      console.log('logUserOut=', loggedIn)
+      console.log('logUserOut has been called')
       flashMessage("You have successfully logged out", "warning");
       localStorage.removeItem("token");
-      console.log('logUserOut & remove token=', localStorage.getItem('token'))
       setLoggedIn(false);
     };
   
@@ -54,11 +49,6 @@ function App() {
         loggedIn={loggedIn}
         logUserOut={logUserOut}
       />
-      {/* <Nav2
-        brand={"Lend-a-Hammer"}
-        loggedIn={loggedIn}
-        logUserOut={logUserOut}
-      /> */}
       <div className="container">
         {message ? (
           <Alert
@@ -68,10 +58,12 @@ function App() {
           />
         ) : null}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home flashMessage={flashMessage} />} />
           <Route
             path="/register"
-            element={<Register flashMessage={flashMessage} logUserIn={logUserIn} />}
+            element={
+              <Register flashMessage={flashMessage} logUserIn={logUserIn} />
+            }
           />
           <Route
             path="/login"
@@ -79,34 +71,32 @@ function App() {
               <Login flashMessage={flashMessage} logUserIn={logUserIn} />
             }
           />
-          {/* <Route
+          <Route
             path="/borrow"
-            element={<Borrow flashMessage={flashMessage} loggedIn={loggedIn} />}
+            element={<Borrow flashMessage={flashMessage}/>}
           >
-            <Route
+            {/* <Route
               path="/borrower:bId/my-reservations"
               element={
                 <MyReserves flashMessage={flashMessage} loggedIn={loggedIn} />
               }
-            />
-          </Route> */}
-          {/* <Route path="/borrow" element={<Borrow />}></Route>
-          <Route path="/lend" element={<Lend />}></Route> */}
-          {/* <Route
-            path="/lend"
-            element={<Lend flashMessage={flashMessage} loggedIn={loggedIn} />}
+            /> */}
+          </Route>
+          <Route
+            path="/lender"
+            element={<Lend flashMessage={flashMessage}/>}
           >
-            <Route
+            {/* <Route
               path="/lender:lId/my-tools"
               element={
                 <MyTools flashMessage={flashMessage} loggedIn={loggedIn} />
               }
-            />
-          </Route> */}
+            /> */}
+          </Route>
           <Route
             path="/user:uId/profile"
             element={
-              <Profile flashMessage={flashMessage} loggedIn={loggedIn} />
+              <Profile flashMessage={flashMessage}/>
             }
           />
         </Routes>

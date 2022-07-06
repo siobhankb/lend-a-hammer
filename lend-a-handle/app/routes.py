@@ -14,7 +14,7 @@ def get_token():
     return jsonify({'token': token})
 
 # create user - no login required
-@app.route('/users', methods=['GET','POST'])
+@app.route('/users', methods=['POST'])
 def create_user():
     data = request.json
     user_email = data['email']
@@ -27,7 +27,8 @@ def create_user():
 @app.route('/user-info', methods=['GET'])
 @token_auth.login_required
 def user_info():
-    return token_auth.current_user().to_dict()
+    data = token_auth.current_user().to_dict()
+    return data
 
 # get user from id
 @app.route('/users/<int:user_id>')

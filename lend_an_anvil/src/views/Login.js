@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react'
 import { Navigate, Link } from 'react-router-dom';
 
 export default function Login(props) {
-
   const [toRedirect, setToRedirect] = useState(null);
 
   const handleFormSubmit = (e) => {
@@ -26,10 +25,7 @@ export default function Login(props) {
       .then((res) => {
         if (res.ok) {
           console.log('res=ok')
-          let r = res.json();
-          console.log(r)
-          return r;
-          // return res.json();
+          return res.json();
         } else {
           props.flashMessage("Incorrect email/password", "danger");
         }
@@ -37,22 +33,17 @@ export default function Login(props) {
       .then((data) => {
         console.log('data=', data);
         if (data) {
-          // console.log('if data... proceeding')
-          // console.log("data.token=", data.token);
+          console.log("data.token=", data.token);
           localStorage.setItem("token", data.token);
-          // let t = localStorage.getItem('token')
-          // console.log('localStorage set/get =', t)
           props.flashMessage("You have successfully logged in", "success");
-          // console.log('should log in user now...')
           props.logUserIn();
           setToRedirect(true);
         }
       });
   }
 
-  console.log("outside scope of fetch -->");
-  let aToken = localStorage.getItem("token");
-  console.log('localStorage.getItem("token")=', aToken);
+  
+
 
   return toRedirect ? (
     <Navigate to="/" />
@@ -107,20 +98,6 @@ export default function Login(props) {
                     readOnly
                   />
                 </div>
-                {/* <div className="row">
-                  <div className="col mx-auto">
-                    <label className="text-center" htmlFor="register">
-                      No account yet?
-                    </label>
-                    <input
-                      className="form-control fw-bold text-center border-0"
-                      type="text"
-                      name="register"
-                      value="Register to Lend or Borrow Tools"
-                      readOnly
-                    ></input>
-                  </div>
-                </div> */}
               </div>
             </div>
           </form>

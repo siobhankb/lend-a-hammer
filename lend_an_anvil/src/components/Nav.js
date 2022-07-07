@@ -6,6 +6,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
+import UserProfile from "./UserProfile";
 
 export default function Nav(props) {
   return (
@@ -28,19 +29,19 @@ export default function Nav(props) {
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav ms-right">
             {props.loggedIn ? (
-            <>
-              <Link className="nav-link" to="/profile">
-                Profile
+              <>
+                <Link className="nav-link" to="/profile">
+                  Profile
+                </Link>
+                <Link className="nav-link" to="/" onClick={props.logUserOut}>
+                  Logout
+                </Link>
+              </>
+            ) : (
+              <Link className="nav-link" to="/login">
+                Login
               </Link>
-              <Link className="nav-link" to="/" onClick={props.logUserOut}>
-                Logout
-              </Link>
-            </>
-             ) : ( 
-            <Link className="nav-link" to="/login">
-              Login
-            </Link>
-             )} 
+            )}
           </div>
           <div className="navbar-nav">
             {/* {props.isLender ? ( */}
@@ -58,6 +59,9 @@ export default function Nav(props) {
               </> */}
             {/* ) : null} */}
           </div>
+          {/* <div>
+            <UserProfile flashMessage={props.flashMessage} />
+          </div> */}
         </div>
       </div>
     </nav>

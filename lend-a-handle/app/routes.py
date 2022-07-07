@@ -81,7 +81,7 @@ def create_borrower():
 def add_tool():
     data = request.json
     current_user = token_auth.current_user()
-    data['lender_id'] = current_user.lender_id
+    data['lender_id'] = current_user.lender.id
     new_tool = Tool(**data)
     return jsonify(new_tool.to_dict())
 
@@ -93,6 +93,7 @@ def get_all_tools():
 
 # get tools by owner
 @app.route('/my-tools/lender<int:my_id>')
+@token_auth.login_required
 def get_my_tools(my_id):
     tools = Tool.query.filter_by(lender_id=int(my_id)).all()
     my_tools = {}

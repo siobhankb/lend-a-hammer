@@ -26,13 +26,14 @@ function App() {
     setLoggedIn(true)
     console.log('from App: setLoggedIn=', loggedIn)
   };
-
-  const logUserOut = () => {
+  
+    const logUserOut = () => {
     console.log('logUserOut has been called')
     flashMessage("You have successfully logged out", "warning");
     localStorage.removeItem("token");
     setLoggedIn(false);
   };
+
 
   return (
     <>
@@ -40,6 +41,7 @@ function App() {
         brand={"Lend-a-Hammer"}
         loggedIn={loggedIn}
         logUserOut={logUserOut}
+        flashMessage={flashMessage}
       />
       <div className="container">
         {message ? (

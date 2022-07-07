@@ -4,12 +4,12 @@ export default function AddToolForm(props) {
     const [hello, sayHello] = useState();
 
     const handleFormSubmit = (e) => {
-        let name = e.target.toolName.value;
+      let name = e.target.toolName.value;
+      console.log('name= ', name)
         let descr = e.target.toolDescr.value;
         let cat = e.target.toolCat.value;
 
         let data = {
-            lender_id: props.lenderID,
             tool_name: name,
             tool_descr: descr,
             category: cat,
@@ -17,7 +17,8 @@ export default function AddToolForm(props) {
         }
 
         let myHeaders = new Headers();
-        myHeaders.append('Authorization', `Bearer ${localStorage.getItem('token')}`)
+      myHeaders.append('Authorization', `Bearer ${localStorage.getItem('token')}`)
+      console.log(localStorage.getItem('token'))
 
         fetch("http://127.0.0.1:5000/tools", {
           methods: "POST",
@@ -29,7 +30,8 @@ export default function AddToolForm(props) {
             if (data.error) {
               props.flashMessage(data.error, "danger");
             } else {
-                let t = data
+              let t = data
+              props.flashMessage(`You have added ${data.tool_name} to your lending list!`, 'success');
               console.log(t)
             }
           })
@@ -52,6 +54,7 @@ export default function AddToolForm(props) {
                     type="text"
                     className="form-control"
                     id="toolName"
+                    name="toolName"
                     rows="2"
                   />
                 </div>
@@ -65,6 +68,7 @@ export default function AddToolForm(props) {
                     type="text"
                     className="form-control"
                     id="toolDescr"
+                    name="toolDescr"
                     rows="2"
                   />
                 </div>
@@ -74,11 +78,18 @@ export default function AddToolForm(props) {
                   Category (#):
                 </label>
                 <div className="col-sm-10">
-                  <input type="text" className="form-control" id="toolCat" />
+                  <input type="text" className="form-control" name="toolCat" id="toolCat" />
                 </div>
               </div>
+              <div className="card-footer text-end">
+                <input
+                  type='submit'
+                  defaultValue="Add Tool"
+                  className="btn btn-warning fw-bold"
+                  onClick={handleFormSubmit}
+                />
+              </div>
             </form>
-            <h5 className="form-control card-footer"> button for submit </h5>
           </div>
         </div>
       </div>

@@ -18,9 +18,9 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(50), nullable=False)
     zip_code = db.Column(db.Numeric(5, 0), nullable=False)
     # <-- this is how to set up a foreign key!!
-    lender = db.relationship('Lender', backref='lender')
+    lender = db.relationship('Lender', backref='lender', uselist=False)
     borrower = db.relationship(
-        'Borrower', backref='borrower')
+        'Borrower', backref='borrower', uselist=False)
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
 
@@ -127,7 +127,7 @@ class Lender(db.Model):
     lender_rating = db.Column(db.Numeric(2,1), default=0)
     # <-- this is how to set up a foreign key!!
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    tools = db.relationship('Tool', backref='lender')
+    tools = db.relationship('Tool', backref='lender', uselist=False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -150,7 +150,7 @@ class Borrower(db.Model):
     borrower_rating = db.Column(db.Numeric(2, 1), default=0)
     # <-- this is how to set up a foreign key!!
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    loans = db.relationship('loanTool', backref='loan_records')
+    loans = db.relationship('loanTool', backref='loan_records', uselist=False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -174,7 +174,7 @@ class Tool(db.Model):
     tool_descr = db.Column(db.String(200), nullable=False)
     category = db.Column(db.Integer, nullable=False)
     available = db.Column(db.Boolean, nullable=False, default=True)
-    loans = db.relationship('loanTool', backref='loans')
+    loans = db.relationship('loanTool', backref='loans', uselist=False)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

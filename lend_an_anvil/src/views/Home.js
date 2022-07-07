@@ -35,7 +35,7 @@ export default function Home(props) {
           console.log('Home res=ok')
           return res.json();
         } else {
-          props.flashMessage("unable to retrieve user info", "danger");
+          props.flashMessage("HOME: unable to retrieve user info", "danger");
         }
       })
       .then((data) => {

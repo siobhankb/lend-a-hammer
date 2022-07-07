@@ -1,6 +1,6 @@
 // basic log-in page
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Navigate, Link } from 'react-router-dom';
 
 export default function Login(props) {
@@ -11,7 +11,9 @@ export default function Login(props) {
     console.log(e);
 
     let email = e.target.email.value;
+    console.log('email= ', email)
     let password = e.target.password.value;
+    console.log("password= ", password);
     let encodedUserPass = btoa(`${email}:${password}`);
 
     let myHeaders = new Headers();
@@ -24,14 +26,14 @@ export default function Login(props) {
     })
       .then((res) => {
         if (res.ok) {
-          console.log('res=ok')
+          console.log("res=ok");
           return res.json();
         } else {
           props.flashMessage("Incorrect email/password", "danger");
         }
       })
       .then((data) => {
-        console.log('data=', data);
+        console.log("data=", data);
         if (data) {
           console.log("data.token=", data.token);
           localStorage.setItem("token", data.token);
@@ -39,7 +41,8 @@ export default function Login(props) {
           props.logUserIn();
           setToRedirect(true);
         }
-      });
+      })
+      .catch((error) => console.log("error", error));;
   }
 
   

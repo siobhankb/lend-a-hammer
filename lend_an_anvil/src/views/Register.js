@@ -1,12 +1,10 @@
 // basic sign-up/register user page
 
 import React, { useState } from 'react'
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate} from "react-router-dom";
 
 export default function Register(props) {
   const [toRedirect, setToRedirect] = useState(null);
-
-let navigate = useNavigate();
 
 const handleFormSubmit = (e) => {
   e.preventDefault();
@@ -46,7 +44,8 @@ const handleFormSubmit = (e) => {
           setToRedirect(true);
           props.logUserIn();
         }
-      });
+      })
+      .catch((error) => console.log("error", error));;
   }
 };
 

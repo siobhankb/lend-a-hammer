@@ -6,11 +6,18 @@
 // --       tools added to lender collection
 
 import React from 'react'
+import AddToolForm from '../components/AddToolForm';
+import MyTools from '../components/MyTools';
+import NewToolForm from '../components/NewToolForm';
 
-export default function Lend() {
+export default function Lend(props) {
   return (
     <>
-      <h4>This is a lender page</h4>
+      <div className="container">
+        <h4 className="text-center">This is a lender page</h4>
+        {/* <MyTools /> */}
+        <AddToolForm user={props.user} lenderID={props.lenderID} />
+      </div>
     </>
   );
 }

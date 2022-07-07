@@ -87,13 +87,22 @@ def add_tool():
 
 # get all tools
 @app.route('/tools')
-def get_tools():
+def get_all_tools():
     tools = Tool.query.all()
-    return jsonify([t.to_dict() for t in tools])
+    return jsonify({[t.to_dict() for t in tools]})
+
+# get tools by owner
+@app.route('/my-tools/lender<int:my_id>')
+def get_my_tools(my_id):
+    tools = Tool.query.filter_by(lender_id=int(my_id)).all()
+    my_tools = {}
+    for t in tools:
+        my_tools[t.tool_name] = t.to_dict()
+    return jsonify(my_tools)
 
 # get tool from id
 @app.route('/tools/<int:tool_id>')
-def get_tool(tool_id):
+def get_a_tool(tool_id):
     tool = Tool.query.get_or_404(tool_id)
     return jsonify(tool.to_dict())
 
@@ -101,7 +110,7 @@ def get_tool(tool_id):
 @app.route('/tools/available')
 def get_available_tools():
     tools = Tool.query.filter(available=True).all()
-    return jsonify([t.to_dict() for t in tools])
+    return jsonify({[t.to_dict() for t in tools]})
 
 # modify specific tool from id
 @app.route('/tools/<int:tool_id>', methods=['PUT'])
@@ -128,5 +137,36 @@ def delete_tool(tool_id):
 # get tool category info
 @app.route('/tool-categories')
 def get_tool_categories():
-    tool_categories = ToolCategory.query.all()
-    return jsonify([tc.to_dict() for tc in tool_categories])
+    tool_cat_objs = ToolCategory.query.all()
+    tool_categories = {}
+    for tc in tool_cat_objs:
+        tool_categories[tc.cat_name] = tc.to_dict()
+    return jsonify(tool_categories)
+
+# get parent category info
+@app.route('/head-categories')
+def get_head_categories():
+    tool_cat_heads = ToolCategory.query.filter_by(parent_id='NULL').all()
+    head_categories = {}
+    for hc in tool_cat_heads:
+        head_categories[hc.cat_name] = hc.to_dict()
+    return jsonify(head_categories)
+
+# get child category list
+@app.route('/childof-<int:parent_cat_id>')
+def get_child_categories(parent_cat_id):
+    tool_cat_children = ToolCategory.query.filter_by(parent_id=parent_cat_id).all()
+    child_categories = {}
+    for cc in tool_cat_children:
+        child_categories[cc.cat_name] = cc.id
+    return jsonify(child_categories)
+
+# get category name from id
+@app.route('/category-ids')
+def get_cat_from_id():
+    toolCats = ToolCategory.query.all()
+    cat_ids = {}
+    for c in toolCats:
+        cat_ids['category'] = (c)
+        cat_ids['id'] = (c.to_dict()['cat_id'])
+    return jsonify(cat_ids)

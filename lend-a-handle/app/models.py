@@ -127,7 +127,7 @@ class Lender(db.Model):
     lender_rating = db.Column(db.Numeric(2,1), default=0)
     # <-- this is how to set up a foreign key!!
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    tools = db.relationship('Tool', backref='owner')
+    tools = db.relationship('Tool', backref='lender')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -167,13 +167,13 @@ class Borrower(db.Model):
         return data
 
 class Tool(db.Model):
-    __tablename__ = 'tool'
+    __tablename__ = 'tools'
     id = db.Column(db.Integer, primary_key=True)
     lender_id = db.Column(db.Integer, db.ForeignKey('lender.id'), nullable=False)
     tool_name = db.Column(db.String(50), nullable=False)
     tool_descr = db.Column(db.String(200), nullable=False)
     category = db.Column(db.Integer, nullable=False)
-    available = db.Column(db.Boolean, nullable=False)
+    available = db.Column(db.Boolean, nullable=False, default=True)
     loans = db.relationship('loanTool', backref='loans')
 
     def __init__(self, **kwargs):
@@ -188,10 +188,10 @@ class Tool(db.Model):
     def to_dict(self):
         data = {
             'tool_id': self.id,
-            'lender_id': self.owner_id,
+            'lender_id': self.lender_id,
             'tool_name': self.tool_name,
             'tool_descr': self.tool_descr,
-            'tool_cat': self.tool_cat,
+            'tool_cat': self.category,
             'available': self.available
         }
         return data
@@ -227,9 +227,15 @@ class ToolCategory(db.Model):
         data = {
             'cat_id': self.id,
             'category': self.cat_name,
-            'parent_cat': self.parent_id,
-            'sub_cat': self.sub_cat
+            'parent_cat': self.parent_id
         }
+        if self.sub_cat:
+            children = []
+            for sc in self.sub_cat:
+                children.append(sc.to_dict())
+            data['sub_cat'] = children
+        else:
+            data['sub_cat'] = []
         return data
 
     def modify(self, data):
@@ -240,7 +246,7 @@ class ToolCategory(db.Model):
 class loanTool(db.Model):
     __tablename__ = 'tool_loans'
     loan_id = db.Column(db.Integer, primary_key=True)
-    tool_id = db.Column(db.Integer, db.ForeignKey('tool.id'), nullable=False)
+    tool_id = db.Column(db.Integer, db.ForeignKey('tools.id'), nullable=False)
     borrower_id = db.Column(db.Integer, db.ForeignKey('borrower.id'), nullable=False)
     date_out = db.Column(db.DateTime, nullable=False)
     date_due = db.Column(db.DateTime, nullable=False)

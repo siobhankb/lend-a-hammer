@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function LenderButton() {
+export default function LenderButton(props) {
   return (
     <>
       <div className="card">
@@ -9,7 +9,12 @@ export default function LenderButton() {
           Ready to Lend Your Tools?
         </h4>
         <div className="card-body text-center mb-3">
-          <Link to="/borrow" className="btn btn-warning w-50 fs-4 fw-bold">
+          <Link
+            to="/lend"
+            className="btn btn-warning w-50 fs-4 fw-bold"
+            user={props.user}
+            lenderID={props.lenderID}
+          >
             Lend Tools!
           </Link>
         </div>

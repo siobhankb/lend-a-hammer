@@ -4,6 +4,7 @@
 //
 
 import React, { useEffect, useState } from "react";
+import { Link } from 'react-router-dom'
 import BorrowerButton from "../components/BorrowerButton";
 import GetBorrower from "../components/GetBorrower";
 import GetLender from "../components/GetLender";
@@ -101,13 +102,22 @@ export default function Home(props) {
         </div>
         <div className="row">
           <div className="col">
-            <LenderButton user={user} lenderID={lenderID} />
-            <GetLender
+            <div className="card">
+              <h4 className="card-title text-center pt-3 my-auto">
+                Ready to Lend Your Tools?
+              </h4>
+              <div className="card-body text-center mb-3">
+                <Link to="/lend" className="btn btn-warning w-50 fs-4 fw-bold">
+                  Lend Tools!
+                </Link>
+              </div>
+            </div>
+            {/* <GetLender
               user={user}
               lenderID={lenderID}
               isLender={isLender}
               flashMessage={props.flashMessage}
-            />
+            /> */}
             {/* {lenderID ? (
               <>
                 <GetLender

@@ -3,18 +3,19 @@ import React, { useState } from 'react'
 export default function AddToolForm(props) {
     const [hello, sayHello] = useState();
 
-    const handleFormSubmit = (e) => {
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
       let name = e.target.toolName.value;
       console.log('name= ', name)
         let descr = e.target.toolDescr.value;
         let cat = e.target.toolCat.value;
 
-        let data = {
+        let data = JSON.stringify({
             tool_name: name,
             tool_descr: descr,
             category: cat,
             available: true
-        }
+        })
 
         let myHeaders = new Headers();
       myHeaders.append('Authorization', `Bearer ${localStorage.getItem('token')}`)
@@ -78,16 +79,26 @@ export default function AddToolForm(props) {
                   Category (#):
                 </label>
                 <div className="col-sm-10">
-                  <input type="text" className="form-control" name="toolCat" id="toolCat" />
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="toolCat"
+                    id="toolCat"
+                  />
                 </div>
               </div>
               <div className="card-footer text-end">
-                <input
+                <button
+                  type="submit"
+                  className="btn btn-warning fw-bold"
+                  onSubmit={handleFormSubmit}
+                >Add Tool</button>
+                {/* <input
                   type='submit'
                   defaultValue="Add Tool"
                   className="btn btn-warning fw-bold"
-                  onClick={handleFormSubmit}
-                />
+                  onSubmit={handleFormSubmit}
+                /> */}
               </div>
             </form>
           </div>

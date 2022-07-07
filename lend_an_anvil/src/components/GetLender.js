@@ -4,7 +4,7 @@ import MyTools from "./MyTools";
 export default function GetLender(props) {
   let tokenCheck = localStorage.getItem('token')
   const [userID, setUserID] = useState('')
-  const [tools, setTools] = useState('');
+  const [myTools, setMyTools] = useState('');
   let endURL = props.lenderID;
   console.log("GetLender lenderID = ", endURL);
 
@@ -19,8 +19,8 @@ export default function GetLender(props) {
 
     console.log(baseURL + endURL);
 
-    fetch((baseURL + endURL), {
-      headers:myHeaders
+    fetch(baseURL + endURL, {
+      headers: myHeaders,
     })
       .then((res) => {
         if (res.ok) {
@@ -32,14 +32,16 @@ export default function GetLender(props) {
       })
       .then((data) => {
         if (data) {
-          setTools(data);
+          let tools = data;
+          setMyTools(tools);
         } else {
           console.log("no Get lender tools data");
         }
       })
-      .catch((error) => console.log("error", error));;
-  }, [tools]);
-  console.log('GetLender tools = ', tools)
+      .catch((error) => console.log("error", error));
+  }, [myTools]);
+  console.log("GetLender tools = ", myTools);
+  localStorage.setItem('my_tools', myTools)
 
   return (
     <>
@@ -47,7 +49,11 @@ export default function GetLender(props) {
       <h5>lender id: {props.lenderID}</h5>
       <div className="card">
         <h4 className="card-title">My Tools</h4>
-        <MyTools tools={tools} lenderID={props.lenderID} flashMessage={props.flashMessage} />
+        <MyTools
+          tools={myTools}
+          lenderID={props.lenderID}
+          flashMessage={props.flashMessage}
+        />
       </div>
     </>
   );

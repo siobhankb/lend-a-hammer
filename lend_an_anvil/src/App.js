@@ -9,6 +9,7 @@ import Lend from './views/Lend';
 import SingleTool from "./views/SingleTool";
 import Borrow from './views/Borrow';
 import MyReserves from "./components/MyReserves";
+import UserProfile from "./views/UserProfile";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -56,7 +57,7 @@ function App() {
               console.log("Lend res=ok");
               return res.json();
             } else {
-              flashMessage("LEND: unable to retrieve user info", "danger");
+              flashMessage("🔨 Please sign in 🔨", "warning");
             }
           })
           .then((data) => {
@@ -99,6 +100,7 @@ function App() {
             element={
               <Home
                 flashMessage={flashMessage}
+                logUserIn={logUserIn}
                 loggedIn={loggedIn}
                 user={user}
                 getCurrentUser={getCurrentUser}
@@ -138,7 +140,17 @@ function App() {
             }
           ></Route>
           <Route
-            path="/modify/<:toolId>"
+            path="/profile"
+            element={
+              <UserProfile
+                flashMessage={flashMessage}
+                user={user}
+                getCurrentUser={getCurrentUser}
+              />
+            }
+          ></Route>
+          <Route
+            path="/modify"
             element={
               <SingleTool
                 flashMessage={flashMessage}

@@ -3,23 +3,23 @@
 // should show a table of tools belonging to LENDER
 // should give button option to modify each tool (like modify blog post)
 // should have option to ADD tool
-import React, { useEffect, useState, useMemo } from 'react'
-import { Link } from 'react-router-dom';
-import ToolRow from './ToolRow'
+import React, { useEffect, useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import ToolRow from "./ToolRow";
 
 export default function MyTools(props) {
-  const [user, setUser] = useState('');
+  const [user, setUser] = useState("");
   const [lenderID, setLenderID] = useState();
-  const [myTools, setMyTools] = useState('');
+  const [myTools, setMyTools] = useState("");
   const [myToolList, setMyToolList] = useState([]);
   const toolHeaders = [
     "Available",
     "Tool Name",
     "Tool Description",
     "Category",
+    "",
   ];
 
-  
   // get lender's tools
   useMemo(() => {
     let isMounted = true;
@@ -29,14 +29,14 @@ export default function MyTools(props) {
     console.log("MyTools lID= ", currUserID);
 
     let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json')
+    myHeaders.append("Content-Type", "application/json");
     myHeaders.append(
       "Authorization",
       `Bearer ${localStorage.getItem("token")}`
     );
     let baseURL = "http://127.0.0.1:5000/my-tools/lender/";
     let lID = currentUser.lender.id;
-      setLenderID(String(lID));
+    setLenderID(String(lID));
     console.log("before fetch lenderID= ", String(lID));
     console.log("url concat= ", baseURL + String(lID));
 
@@ -58,8 +58,8 @@ export default function MyTools(props) {
             let tools = data;
             setMyTools(tools);
             console.log("myTools from fetch= ", tools);
-            let toolList = Object.keys(tools)
-            setMyToolList(toolList)
+            let toolList = Object.keys(tools);
+            setMyToolList(toolList);
             console.log("myToolList= ", toolList);
           }
         } else {
@@ -67,7 +67,7 @@ export default function MyTools(props) {
         }
       })
       .catch((error) => console.log("error", error));
-    
+
     return () => {
       isMounted = false;
     };
@@ -95,22 +95,28 @@ export default function MyTools(props) {
   //   console.log("setUser --> ", currentUser);
   // }
 
-  
   return (
     <>
-      <table className="table table-warning table-striped table-hover text-center">
-        <thead>
+      <table className="table">
+        <thead className="table-warning text-center">
           <tr>
             {toolHeaders.map((h, i) => (
               <th key={i}>{h}</th>
             ))}
           </tr>
         </thead>
-        <tbody>
-          {myToolList.map((t) => {
-            <ToolRow toolName={t} myTools={myTools} />;
-          })}
-        </tbody>
+        <tbody></tbody>
+        {/* {this.state.racers.map((racer, idx) => (
+          <RacerRow racer={racer} key={idx} />
+        ))} */}
+        {myToolList.map((tool, index) => (
+          <ToolRow
+            key={index}
+            toolName={tool}
+            myTools={myTools}
+            flashMessage={props.flashMessage}
+          />
+        ))}
       </table>
       {/* <div className="card mb-3">
         <div className="card-header text-center fs-3">

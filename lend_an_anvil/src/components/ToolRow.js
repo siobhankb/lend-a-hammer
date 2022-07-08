@@ -19,21 +19,32 @@ export default function ToolRow(props) {
       <tr>
         <th>
           {myTools[toolName][available] === true ? (
-            <button onClick={handleAvailButton} className="btn btn-success w-50">Available</button>
+            <button
+              onClick={handleAvailButton}
+              className="btn btn-success w-50"
+            >
+              Available
+            </button>
           ) : (
-            <button onClick={handleAvailButton} className="btn btn-secondary w-50">Unavailable</button>
+            <button
+              onClick={handleAvailButton}
+              className="bg-success bg-opacity-25 fw-bold text-dark"
+            >
+              Unavailable
+            </button>
           )}
         </th>
-        <td id={myTools[toolName]['id']} >{toolName}</td>
-        <td>{myTools[toolName]['tool_descr']}</td>
-        <td>{myTools[toolName]['category']}</td>
+        <td id={myTools[toolName]["tool_id"]}>{toolName}</td>
+        <td>{myTools[toolName]["tool_descr"]}</td>
+        <td>{myTools[toolName]["tool_cat"]}</td>
         <td>
           <Link
-            className="btn btn-primary text-warning fw-bold w-50"
-            to={"/"}
-            // {`/${tool.id}`}
+            className="btn bg-primary bg-opacity-50 text-dark"
+            to={"/modify"}
+            myTools={myTools}
+            thisTool={myTools[toolName]}
           >
-            Modify {props.toolName}
+            Modify
           </Link>
         </td>
       </tr>

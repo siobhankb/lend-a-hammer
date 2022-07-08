@@ -3,9 +3,14 @@
 // plus space at the bottom for modifying info...
 
 import React from 'react'
+import UpdateToolForm from '../components/UpdateToolForm'
 
-export default function SingleTool() {
+export default function SingleTool(props) {
+  //props: thisTool, myTools
+
   return (
-    <div>SingleTool</div>
+    <>
+      <UpdateToolForm thisTool={props.thisTool} myTools={props.myTools} />
+    </>
   )
 }

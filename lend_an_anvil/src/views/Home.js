@@ -35,7 +35,7 @@ export default function Home(props) {
           console.log("Home res=ok");
           return res.json();
         } else {
-          props.flashMessage("HOME: unable to retrieve user info", "danger");
+          props.flashMessage("🔨 Please sign in 🔨", "warning");
         }
       })
       .then((data) => {
@@ -130,6 +130,21 @@ export default function Home(props) {
       </div>
     </>
   ) : (
-    <Login flashMessage={props.flashMessage} logUserIn={props.logUserIn} />
+    <>
+      <div className="container">
+        <div className="card">
+          <div className="card-header bg-info bg-opacity-50 text-center py-3 my-auto">
+            <h3 className="card-title text-center pt-3 my-auto">
+              Welcome to Lend-A-Hammer
+            </h3>
+            <h4>Please sign in:</h4>
+          </div>
+          <Login
+            flashMessage={props.flashMessage}
+            logUserIn={props.logUserIn}
+          />
+        </div>
+      </div>
+    </>
   );
 }

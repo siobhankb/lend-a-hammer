@@ -6,11 +6,11 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import UserProfile from "./UserProfile";
+import UserProfile from "../views/UserProfile";
 
 export default function Nav(props) {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-light bg-info">
       <div className="container-fluid">
         <Link className="navbar-brand" to="/">
           <strong>{props.brand}</strong>
@@ -30,6 +30,12 @@ export default function Nav(props) {
           <div className="navbar-nav ms-right">
             {props.loggedIn ? (
               <>
+                <Link className="nav-link" to="/lend">
+                  Lend
+                </Link>
+                <Link className="nav-link" to="/borrow">
+                  Borrow
+                </Link>
                 <Link className="nav-link" to="/profile">
                   Profile
                 </Link>

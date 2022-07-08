@@ -64,8 +64,7 @@ export default function GetLender(props) {
   return (
     <>
       <div className="card col-8 mx-auto">
-        <h4>This shows LENDER info</h4>
-        <h5>lender id: {lenderID}</h5>
+        <h4>Lend Tools</h4>
         <h4 className="card-title text-center">My Tools</h4>
         <div className="card-body text-center">
           <MyTools

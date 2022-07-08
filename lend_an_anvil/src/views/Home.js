@@ -3,37 +3,35 @@
 // lend button
 //
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from 'react-router-dom'
 import BorrowerButton from "../components/BorrowerButton";
 import GetBorrower from "../components/GetBorrower";
 import GetLender from "../components/GetLender";
-import LenderButton from "../components/LenderButton";
 
 export default function Home(props) {
+  const [userToken, setUserToken] = useState(localStorage.getItem('token'));
   const [user, setUser] = useState();
-  const [userID, setUserID] = useState();
-  const [isBorrower, setIsBorrower] = useState();
   const [borrowerID, setBorrowerID] = useState();
-  const [borrowerRating, setBorrowerRating] = useState();
-  const [isLender, setIsLender] = useState();
-  const [lenderID, setLenderID] = useState();
 
+  console.log('Home Page userToken= ', userToken)
   let userHeaders = new Headers();
   userHeaders.append("Content-Type", "application/json");
   userHeaders.append(
     "Authorization",
-    `Bearer ${localStorage.getItem("token")}`
+    `Bearer ${userToken}`
   );
 
-  useEffect(() => {
+  useMemo(() => {
+    let isMounted = true;
+    console.log("Home: I'm inside the Memo!")
     fetch("http://127.0.0.1:5000/user-info", {
       method: "GET",
       headers: userHeaders,
     })
       .then((res) => {
         if (res.ok) {
-          console.log('Home res=ok')
+          console.log("Home res=ok");
           return res.json();
         } else {
           props.flashMessage("HOME: unable to retrieve user info", "danger");
@@ -41,36 +39,19 @@ export default function Home(props) {
       })
       .then((data) => {
         if (data) {
-          setUser(data);
-          setUserID(data.id);
-          let lender = data.lender;
-          console.log("Home lender=", lender);
-          if (lender !== {}) {
-            const lenderID = lender.id;
-            console.log("Home lenderID=", lenderID);
-            setIsLender(true);
-            setLenderID(lenderID);
-          } else {
-            setIsLender(false);
-            setLenderID("null");
-          }
-          let borrower = data.borrower;
-          if (borrower !== {}) {
-            const borrowID = borrower.borrower_id;
-            console.log('Home borrowerID = ', borrowID)
-            setIsBorrower(true);
-            setBorrowerID(borrowID);
-            setBorrowerRating(borrower["borrower_rating"]);
-          } else {
-            setIsBorrower(false);
-            setBorrowerID("null");
+          if (isMounted) {
+            let userInfo = data;
+            setUser(userInfo);
+            console.log("fetched userInfo= ", userInfo);
           }
         }
       });
+    return () => { isMounted = false }
   }, []);
 
   const checkBorrower = () => {
-    if (isBorrower === false) {
+    if (user.borrower === {}) {
+      let isMounted = true;
       let myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append(
@@ -86,19 +67,30 @@ export default function Home(props) {
           if (data.error) {
             props.flashMessage(data.error, "danger");
           } else {
-            setBorrowerID(data.id);
+            if (isMounted) {
+              setBorrowerID(data.id);
+            }
           }
         })
         .catch((error) => console.log("error", error));
+      return () => {
+        isMounted = false;
+      };
     }
   };
 
-  return (
-    <>
+  if (user) {
+    console.log("user= ", user);
+  } else {
+    console.log('no user yet');
+  }
+  
+  return (user ? (
+  <>
       <div className="container">
         <div className="row">
           <h2 className="text-center">Home - Lend a Hammer</h2>
-          <h4 className="text-center"> user ID: {userID} </h4>
+          <h4 className="text-center"> user ID: {user.id} </h4>
         </div>
         <div className="row">
           <div className="col">
@@ -114,16 +106,14 @@ export default function Home(props) {
             </div>
             {/* <GetLender
               user={user}
-              lenderID={lenderID}
-              isLender={isLender}
+              lenderID={user.lender.id}
               flashMessage={props.flashMessage}
             /> */}
-            {/* {lenderID ? (
+            {/* {userlender !=={} ? (
               <>
                 <GetLender
                   user={user}
-                  lenderID={lenderID}
-                  isLender={isLender}
+                  lenderID={user.lender.id}
                   flashMessage={props.flashMessage}
                 />
               </>
@@ -136,11 +126,9 @@ export default function Home(props) {
             <GetBorrower
               user={user}
               borrowerID={borrowerID}
-              borrowerRating={borrowerRating}
             />
           </div>
         </div>
       </div>
-    </>
-  );
+    </>) : (<h1>no user</h1>))
 }

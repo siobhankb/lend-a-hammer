@@ -5,7 +5,7 @@
 // --drop-down to choose tool category...
 // --add to collection button (that triggers adding new tool to db)
 // --button to set available/not available
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 
 
 export default function NewToolForm(props) {
@@ -18,7 +18,8 @@ export default function NewToolForm(props) {
     const [childCatList, setChildCatList] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
 
-    useEffect(() => {
+  useMemo(() => {
+    let isMounted = true;
       fetch("http://127.0.0.1:5000/tool-categories")
         .then((res) => {
           return res.json();
@@ -27,10 +28,13 @@ export default function NewToolForm(props) {
           if (data.error) {
             props.flashMessage(data.error, "danger");
           } else {
-            let c = data
-            setAllCats(c);
+            if (isMounted) {
+              let c = data;
+              setAllCats(c);
+            }
           }
         });
+    return () => { isMounted = false }
     }, []); 
   
     useEffect(() => {

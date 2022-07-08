@@ -3,17 +3,68 @@
 // should show a table of tools belonging to LENDER
 // should give button option to modify each tool (like modify blog post)
 // should have option to ADD tool
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { Link } from 'react-router-dom';
 import ToolRow from './ToolRow'
 
 export default function MyTools(props) {
-  const toolHeaders = ["Available", "Tool Name", "Tool Description", "Category"];
-  let lenderID = props.lenderID
+  const [user, setUser] = useState(props.user);
+  const [lenderID, setLenderID] = useState(props.lenderID);
+  const [addMode, setAddMode] = useState(false);
+  const [myTools, setMyTools] = useState([]);
+  const toolHeaders = [
+    "Available",
+    "Tool Name",
+    "Tool Description",
+    "Category",
+  ];
   console.log("myTools lenderID =", props.lenderID);
   console.log('myTools tools =', props.tools);
   let myToolList = Object.keys(props.tools)
   console.log('myToolList = ', myToolList)
+
+  // get lender's tools
+  useMemo(() => {
+    let isMounted = true;
+    let myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("token")}`
+    );
+    let baseURL = "http://127.0.0.1:5000/my-tools/lender/";
+
+    fetch(baseURL + lenderID, {
+      methods: "GET",
+      headers: myHeaders,
+    })
+      .then((res) => {
+        if (res.ok) {
+          console.log("GetLender fetch myTools: res=ok");
+          return res.json();
+        } else {
+          console.log("GetLender fetch myTools res= NOT ok");
+        }
+      })
+      .then((data) => {
+        if (data) {
+          if (isMounted) {
+            let tools = data;
+            setMyTools(tools);
+          }
+        } else {
+          console.log("no -Get lender- tools data");
+        }
+      })
+      .catch((error) => console.log("error", error));
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (myTools) {
+    console.log("GetLender tools = ", myTools);
+    localStorage.setItem("my_tools", myTools);
+  }
 
   return (
     <>

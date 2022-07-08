@@ -11,7 +11,8 @@ import Borrow from './views/Borrow';
 import MyReserves from "./components/MyReserves";
 
 function App() {
-    const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState(null);
+  const [user, setCurrentUser] = useState(null);
     const [category, setCategory] = useState(null);
     const [loggedIn, setLoggedIn] = useState(
       localStorage.getItem("token") ? true : false
@@ -31,9 +32,81 @@ function App() {
     console.log('logUserOut has been called')
     flashMessage("You have successfully logged out", "warning");
     localStorage.removeItem("token");
+    localStorage.removeItem('current_user');
+    localStorage.removeItem('user');
     setLoggedIn(false);
   };
 
+  const getCurrentUser = () => {
+    if (!user) {
+      let userToken = localStorage.getItem("token");
+      let userHeaders = new Headers();
+      userHeaders.append("Content-Type", "application/json");
+      userHeaders.append("Authorization", `Bearer ${userToken}`);
+
+      if (userToken) {
+        // get user from token
+        fetch("http://127.0.0.1:5000/user-info", {
+          method: "GET",
+          headers: userHeaders,
+        })
+          .then((res) => {
+            if (res.ok) {
+              console.log("Lend res=ok");
+              return res.json();
+            } else {
+              flashMessage("LEND: unable to retrieve user info", "danger");
+            }
+          })
+          .then((data) => {
+            if (data) {
+              let currentUser = data;
+              getCurrentUser(currentUser);
+            }
+          });
+      }
+    }
+  
+}
+
+  const getUser = (d) => {
+    setCurrentUser(d);
+    localStorage.setItem('current_user', JSON.stringify(d))
+    return d
+  }
+  // useEffect(() => {
+  //   let userToken = localStorage.getItem("token");
+  //   let userHeaders = new Headers();
+  //   userHeaders.append("Content-Type", "application/json");
+  //   userHeaders.append("Authorization", `Bearer ${userToken}`);
+
+  //   if (userToken) {
+  //     // get user from token
+  //     fetch("http://127.0.0.1:5000/user-info", {
+  //       method: "GET",
+  //       headers: userHeaders,
+  //     })
+  //       .then((res) => {
+  //         if (res.ok) {
+  //           console.log("Lend res=ok");
+  //           return res.json();
+  //         } else {
+  //           flashMessage("LEND: unable to retrieve user info", "danger");
+  //         }
+  //       })
+  //       .then((data) => {
+  //         if (data) {
+  //           let currentUser = data;
+  //           getUser(currentUser);
+  //         }
+  //       });
+  //   }
+    
+  // }, [user]);
+
+  // const getUser = (d) => {
+  //   setUser(d);
+  // };
 
   return (
     <>
@@ -42,6 +115,8 @@ function App() {
         loggedIn={loggedIn}
         logUserOut={logUserOut}
         flashMessage={flashMessage}
+        user={user}
+        getCurrentUser={getCurrentUser}
       />
       <div className="container">
         {message ? (
@@ -58,6 +133,8 @@ function App() {
               <Home
                 flashMessage={flashMessage}
                 loggedIn={loggedIn}
+                user={user}
+                getCurrentUser={getCurrentUser}
               />
             }
           />
@@ -75,11 +152,24 @@ function App() {
           />
           <Route
             path="/borrow"
-            element={<Borrow flashMessage={flashMessage} />}
-          >
-          </Route>
-          <Route path="/lend" element={<Lend flashMessage={flashMessage} />}>
-          </Route>
+            element={
+              <Borrow
+                flashMessage={flashMessage}
+                user={user}
+                getCurrentUser={getCurrentUser}
+              />
+            }
+          ></Route>
+          <Route
+            path="/lend"
+            element={
+              <Lend
+                flashMessage={flashMessage}
+                user={user}
+                getCurrentUser={getCurrentUser}
+              />
+            }
+          ></Route>
         </Routes>
       </div>
     </>

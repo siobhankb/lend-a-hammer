@@ -21,10 +21,10 @@ export default function GetBorrower(props) {
             </thead>
             <tbody>
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <th scope="row">05/09/22</th>
+                <td>a tool</td>
+                <td>Rizzo diRat</td>
+                <td>07/08/22</td>
               </tr>
             </tbody>
           </table>

@@ -1,59 +1,106 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import MyTools from "./MyTools";
+import AddToolForm from "./AddToolForm";
 
 export default function GetLender(props) {
-  let tokenCheck = localStorage.getItem('token')
-  const [userID, setUserID] = useState('')
-  const [myTools, setMyTools] = useState('');
-  let endURL = props.lenderID;
-  console.log("GetLender lenderID = ", endURL);
+  //props = user, lenderID, flashMessage
+  const [user, setUser] = useState(props.user);
+  const [lenderID, setLenderID] = useState(props.lenderID);
+  const [addMode, setAddMode] = useState(false);
 
-  useEffect(() => {
-    let myHeaders = new Headers();
-    myHeaders.append(
-      "Authorization",
-      `Bearer ${localStorage.getItem("token")}`
-    );
-    console.log(endURL);
-    let baseURL = "http://127.0.0.1:5000/my-tools/lender";
+  const [userToken, setUserToken] = useState(localStorage.getItem("token"));
 
-    console.log(baseURL + endURL);
 
-    fetch(baseURL + endURL, {
-      headers: myHeaders,
+  useMemo(() => {
+    let isMounted = true;
+    console.log("Get Lender: I'm inside the Memo!");
+
+    console.log("Get Lender Component userToken= ", userToken);
+    let userHeaders = new Headers();
+    userHeaders.append("Content-Type", "application/json");
+    userHeaders.append("Authorization", `Bearer ${userToken}`);
+
+    fetch("http://127.0.0.1:5000/user-info", {
+      method: "GET",
+      headers: userHeaders,
     })
       .then((res) => {
         if (res.ok) {
-          console.log("GetLender res=ok");
+          console.log("Lend user-info res=ok");
           return res.json();
         } else {
-          console.log("GetLender res= NOT ok");
+          props.flashMessage("LEND: unable to retrieve user info", "danger");
         }
       })
       .then((data) => {
         if (data) {
-          let tools = data;
-          setMyTools(tools);
-        } else {
-          console.log("no Get lender tools data");
+          if (isMounted) {
+            let userInfo = data;
+            setUser(userInfo);
+            console.log("Lend: fetched userInfo= ", userInfo);
+            console.log("user= ", userInfo);
+            console.log("user.lender= ", userInfo.lender);
+            console.log("user.lender.id= ", userInfo.lender.id);
+          }
         }
-      })
-      .catch((error) => console.log("error", error));
-  }, [myTools]);
-  console.log("GetLender tools = ", myTools);
-  localStorage.setItem('my_tools', myTools)
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
+  if (user) {
+    console.log("user= ", user);
+    console.log("user.lender= ", user.lender);
+    console.log("user.lender.id= ", user.lender.id);
+  }
+  
+  const changeAddMode = (e) => {
+    e.preventDefault();
+    setAddMode(!addMode)
+  }
+    
+  console.log('addMode= ', addMode)
   return (
     <>
-      <h4>This shows LENDER info</h4>
-      <h5>lender id: {props.lenderID}</h5>
-      <div className="card">
-        <h4 className="card-title">My Tools</h4>
-        <MyTools
-          tools={myTools}
-          lenderID={props.lenderID}
+      <div className="card col-8 mx-auto">
+        <h4>This shows LENDER info</h4>
+        <h5>lender id: {lenderID}</h5>
+        <h4 className="card-title text-center">My Tools</h4>
+
+        {/* <MyTools
+          myTools={myTools}
+          lenderID={lenderID}
           flashMessage={props.flashMessage}
-        />
+        /> */}
+        <div className="card-body text-center">
+          {/* <button
+            onClick={changeAddMode}
+            className=" form-control btn btn-warning w-30"
+          >
+            Add Tools
+          </button> */}
+          {addMode == true ? (
+            <>
+              {/* <h6>addMode= {addMode}</h6> */}
+              <AddToolForm flashMessage={props.flashMessage} />
+              {/* <AddToolForm user={user} lenderID={user.lender.id} /> */}
+              <button
+                onClick={changeAddMode}
+                className="btn btn-secondary text-center mt-3"
+              >
+                Finished Adding Tools
+              </button>
+            </>
+          ) : (
+            <>
+              <h6>addMode= {addMode}</h6>
+              <button onClick={changeAddMode} className="btn btn-success">
+                Add More Tools!
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </>
   );

@@ -216,7 +216,7 @@ class ToolCategory(db.Model):
     parent_id = db.Column(db.Integer, db.ForeignKey(
         'tool_category.id'), index=True, nullable=True)
     sub_cat = db.relationship('ToolCategory', backref=db.backref(
-        'parent', remote_side='ToolCategory.id'))
+        'parent', remote_side='ToolCategory.id', uselist=False))
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

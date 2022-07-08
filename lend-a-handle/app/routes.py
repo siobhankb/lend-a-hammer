@@ -92,7 +92,7 @@ def get_all_tools():
     return jsonify({[t.to_dict() for t in tools]})
 
 # get tools by owner
-@app.route('/my-tools/lender<int:my_id>')
+@app.route('/my-tools/lender/<int:my_id>')
 @token_auth.login_required
 def get_my_tools(my_id):
     tools = Tool.query.filter_by(lender_id=int(my_id)).all()

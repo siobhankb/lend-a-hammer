@@ -7,7 +7,6 @@ export default function GetLender(props) {
   const [user, setUser] = useState(props.user);
   const [lenderID, setLenderID] = useState(props.lenderID);
   const [addMode, setAddMode] = useState(false);
-
   const [userToken, setUserToken] = useState(localStorage.getItem("token"));
 
 
@@ -68,19 +67,12 @@ export default function GetLender(props) {
         <h4>This shows LENDER info</h4>
         <h5>lender id: {lenderID}</h5>
         <h4 className="card-title text-center">My Tools</h4>
-
-        {/* <MyTools
-          myTools={myTools}
-          lenderID={lenderID}
-          flashMessage={props.flashMessage}
-        /> */}
         <div className="card-body text-center">
-          {/* <button
-            onClick={changeAddMode}
-            className=" form-control btn btn-warning w-30"
-          >
-            Add Tools
-          </button> */}
+          <MyTools
+            user={user}
+            lenderID={lenderID}
+            flashMessage={props.flashMessage}
+          />
           {addMode == true ? (
             <>
               {/* <h6>addMode= {addMode}</h6> */}

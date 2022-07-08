@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 import ToolRow from './ToolRow'
 
 export default function MyTools(props) {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
-  const [lenderID, setLenderID] = useState(0);
+  const [user, setUser] = useState('');
+  const [lenderID, setLenderID] = useState();
   const [myTools, setMyTools] = useState('');
   const [myToolList, setMyToolList] = useState([]);
   const toolHeaders = [
@@ -18,20 +18,16 @@ export default function MyTools(props) {
     "Tool Description",
     "Category",
   ];
-  if (user) {
-  console.log("myTools lenderID =", user.lender.id);
-  console.log("myTools tools =", myTools);
-  setLenderID(user.lender.id);
-  } else {
-    let currentUser = JSON.parse(localStorage.getItem("user"));
-    setUser(currentUser);
-    setLenderID(currentUser.lender.id);
-}
 
-
+  
   // get lender's tools
   useMemo(() => {
     let isMounted = true;
+    let currentUser = JSON.parse(localStorage.getItem("user"));
+    let currUserID = currentUser.lender.id;
+    console.log("currentUser in MyTools=", currentUser);
+    console.log("MyTools lID= ", currUserID);
+
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json')
     myHeaders.append(
@@ -39,8 +35,12 @@ export default function MyTools(props) {
       `Bearer ${localStorage.getItem("token")}`
     );
     let baseURL = "http://127.0.0.1:5000/my-tools/lender/";
+    let lID = currentUser.lender.id;
+      setLenderID(String(lID));
+    console.log("before fetch lenderID= ", String(lID));
+    console.log("url concat= ", baseURL + String(lID));
 
-    fetch(baseURL + lenderID, {
+    fetch(baseURL + String(lID), {
       methods: "GET",
       headers: myHeaders,
     })
@@ -57,33 +57,45 @@ export default function MyTools(props) {
           if (isMounted) {
             let tools = data;
             setMyTools(tools);
+            console.log("myTools from fetch= ", tools);
+            let toolList = Object.keys(tools)
+            setMyToolList(toolList)
+            console.log("myToolList= ", toolList);
           }
         } else {
           console.log("no data from -MyTools-");
         }
       })
       .catch((error) => console.log("error", error));
+    
     return () => {
       isMounted = false;
     };
   }, []);
 
-  if (myTools) {
-    console.log("MyTools tools = ", myTools);
-    localStorage.setItem("my_tools", JSON.stringify(myTools));
-    getToolList();
-  } else {
-    let currentUserTools = JSON.parse(localStorage.getItem('my_tools'))
-    setMyTools(currentUserTools);
-    getToolList();
-    console.log("MyTools currentUserTools = ", currentUserTools);
-  }
+  // if (myTools) {
+  //   console.log("MyTools tools = ", myTools);
+  //   localStorage.setItem("my_tools", JSON.stringify(myTools));
+  //   getToolList();
+  // } else {
+  //   let currentUserTools = localStorage.getItem("my_tools");
+  //   setMyTools(currentUserTools);
+  //   getToolList(currentUserTools);
+  //   console.log("MyTools currentUserTools = ", currentUserTools);
+  // }
 
-  const getToolList = () => {
-    let myToolList = Object.keys(myTools)
-    setMyToolList(myToolList)
-  }
+  // if (user) {
+  //   console.log("myTools lenderID =", user.lender.id);
+  //   console.log("myTools tools =", myTools);
+  //   setLenderID(user.lender.id);
+  // } else {
+  //   let currentUser = localStorage.getItem("user");
+  //   setUser(currentUser);
+  //   setLenderID(currentUser.lender.id);
+  //   console.log("setUser --> ", currentUser);
+  // }
 
+  
   return (
     <>
       <table className="table table-warning table-striped table-hover text-center">

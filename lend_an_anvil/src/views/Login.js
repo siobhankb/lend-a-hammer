@@ -52,58 +52,56 @@ export default function Login(props) {
     <Navigate to="/" />
   ) : (
     <>
-      <h4 className="text-center my-5">Log in to Lend a Hammer</h4>
+      <h4 className="text-center my-4">Log in to Lend a Hammer</h4>
       <div className="row">
-        <div className="col col-lg-5 mx-auto">
-          <form onSubmit={handleFormSubmit}>
-            <div className="from-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                className="form-control"
-                placeholder="name@mail.com"
-              />
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                name="password"
-                className="form-control"
-                placeholder="Enter Password"
-              />
-              <div className="row">
-                <div className="col col-lg-4 mx-auto">
-                  <input
-                    type="submit"
-                    className="btn btn-primary mt-3"
-                    value="Login"
-                  />
+        <div className="col col-lg-6 mx-auto">
+          <div className="card px-3 mb-5">
+            <form onSubmit={handleFormSubmit} className="form-group mx-2">
+              <div className="form-group mx-2">
+                <label htmlFor="email">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control mb-3"
+                  placeholder="name@mail.com"
+                />
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control  mb-3"
+                  placeholder="Enter Password"
+                />
+                <div className="row">
+                  <div className="col col-lg-4 mx-auto">
+                    <input
+                      type="submit"
+                      className="btn btn-primary mt-3"
+                      value="Login"
+                    />
+                  </div>
+                </div>
+                <div className="card-footer bg-light border-0 text-center my-2">
+                  <div className="row mb-3 align-contents-center">
+                    <label
+                      htmlFor="registerHoriz"
+                      className="col-4 col-form-label fs-6 align-middle text-end"
+                    >
+                      <small>No Account Yet?</small>
+                    </label>
+                    <div className="col-7">
+                      <Link
+                        to="/register"
+                        className="btn btn-secondary-opacity-80 fw-bold"
+                      >
+                        Register to Lend or Borrow Tools
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="row mb-3">
-                <label
-                  htmlFor="registerHoriz"
-                  className="col-4 col-form-label fs-6 align-middle text-end"
-                >
-                  <small>No Account Yet?</small>
-                </label>
-                <div className="col-7">
-                  <Link
-                    className="form-control fw-bold fs-6 text-center align-middle border-0"
-                      id="registerHoriz"
-                      to='/register'
-                  ></Link>
-                  <input
-                    type="button"
-                    className="form-control fw-bold fs-6 text-center align-middle border-0"
-                    id="registerHoriz"
-                    value="Register to Lend or Borrow Tools"
-                    readOnly
-                  />
-                </div>
-              </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </>

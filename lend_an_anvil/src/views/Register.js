@@ -58,7 +58,7 @@ const handleFormSubmit = (e) => {
           <form onSubmit={handleFormSubmit}>
             <div className="form-group">
               <input
-                className="form-control form-control-lg fw-bold text-center border-0 mt-5"
+                className="form-control form-control-lg fw-bold text-center border-0 mt-4  mb-3"
                 type="text"
                 value="Register to Lend or Borrow Tools"
                 readOnly
@@ -67,42 +67,42 @@ const handleFormSubmit = (e) => {
               <input
                 type="text"
                 name="fname"
-                className="form-control"
+                className="form-control mb-3"
                 placeholder="First"
               />
               <label htmlFor="lname">Last Name</label>
               <input
                 type="text"
                 name="lname"
-                className="form-control"
+                className="form-control mb-3"
                 placeholder="Last"
               />
               <label htmlFor="zip">Zip Code</label>
               <input
                 type="text"
                 name="zip"
-                className="form-control"
+                className="form-control mb-3"
                 placeholder="5-Digit Zip Code"
               />
               <label htmlFor="email">Email</label>
               <input
                 type="email"
                 name="email"
-                className="form-control"
+                className="form-control mb-3"
                 placeholder="name@mail.com"
               />
               <label htmlFor="password">Password</label>
               <input
                 type="password"
                 name="password"
-                className="form-control"
+                className="form-control mb-3"
                 placeholder="Enter Password"
               />
               <label htmlFor="confirmPass">Confirm Password</label>
               <input
                 type="password"
                 name="confirmPass"
-                className="form-control"
+                className="form-control mb-3"
                 placeholder="Confirm Password"
               />
               <div className="row">

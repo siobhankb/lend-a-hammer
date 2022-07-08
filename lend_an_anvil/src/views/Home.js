@@ -13,6 +13,7 @@ import Login from "./Login";
 export default function Home(props) {
   const [userToken, setUserToken] = useState(localStorage.getItem('token'));
   const [user, setUser] = useState();
+  const [lenderID, setLenderID] = useState();
   const [borrowerID, setBorrowerID] = useState();
 
   console.log('Home Page userToken= ', userToken)
@@ -80,6 +81,37 @@ export default function Home(props) {
     }
   };
 
+  const checkLender = () => {
+    if (user.lender === {}) {
+      let isMounted = true;
+      let myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append(
+        "Authorization",
+        `Bearer ${localStorage.getItem("token")}`
+      );
+      fetch("http://127.0.0.1:5000/users/lenders", {
+        method: "POST",
+        headers: myHeaders,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            props.flashMessage(data.error, "danger");
+          } else {
+            if (isMounted) {
+              let lender = data
+              setLenderID(lender.id);
+            }
+          }
+        })
+        .catch((error) => console.log("error", error));
+      return () => {
+        isMounted = false;
+      };
+    }
+  };
+
   if (user) {
     console.log("user= ", user);
   } else {
@@ -130,6 +162,21 @@ export default function Home(props) {
       </div>
     </>
   ) : (
-    <Login flashMessage={props.flashMessage} logUserIn={props.logUserIn} />
+    <>
+      <div className="container">
+        <div className="card">
+          <div className="card-header bg-info bg-opacity-50 text-center py-3 my-auto">
+            <h3 className="card-title text-center pt-3 my-auto">
+              Welcome to Lend-A-Hammer
+            </h3>
+            <h4>Please sign in:</h4>
+          </div>
+          <Login
+            flashMessage={props.flashMessage}
+            logUserIn={props.logUserIn}
+          />
+        </div>
+      </div>
+    </>
   );
 }

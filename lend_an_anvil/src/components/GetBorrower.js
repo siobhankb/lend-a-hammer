@@ -7,7 +7,7 @@ export default function GetBorrower(props) {
       <div className="card">
         <div className="card-header text-center">
           <h4>This shows BORROWER info</h4>
-          <h5>borrower id: {props.borrowerID}</h5>
+          <h5> (...under construction...) </h5>
         </div>
         <div className="card-body">
           <table className="table">
@@ -31,7 +31,7 @@ export default function GetBorrower(props) {
         </div>
         <div className="card-footer text-center">
           <h4>This shows BORROWER rating</h4>
-          <h5>borrower rating: {props.borrowerRating}</h5>
+          <h5>borrower rating: 5.0 </h5>
         </div>
       </div>
     </>

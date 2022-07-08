@@ -17,9 +17,9 @@ export default function MyTools(props) {
     "Tool Name",
     "Tool Description",
     "Category",
+    ""
   ];
 
-  
   // get lender's tools
   useMemo(() => {
     let isMounted = true;
@@ -98,19 +98,26 @@ export default function MyTools(props) {
   
   return (
     <>
-      <table className="table table-warning table-striped table-hover text-center">
-        <thead>
+      <table className="table">
+        <thead className="table-warning text-center">
           <tr>
             {toolHeaders.map((h, i) => (
               <th key={i}>{h}</th>
             ))}
           </tr>
         </thead>
-        <tbody>
-          {myToolList.map((t) => {
-            <ToolRow toolName={t} myTools={myTools} />;
-          })}
-        </tbody>
+        <tbody></tbody>
+        {/* {this.state.racers.map((racer, idx) => (
+          <RacerRow racer={racer} key={idx} />
+        ))} */}
+        {myToolList.map((tool, index) => (
+          <ToolRow
+            key={index}
+            toolName={tool}
+            myTools={myTools}
+            flashMessage={props.flashMessage}
+          />
+        ))}
       </table>
       {/* <div className="card mb-3">
         <div className="card-header text-center fs-3">

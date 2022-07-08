@@ -9,7 +9,6 @@ export default function GetLender(props) {
   const [addMode, setAddMode] = useState(false);
   const [userToken, setUserToken] = useState(localStorage.getItem("token"));
 
-
   useMemo(() => {
     let isMounted = true;
     console.log("Get Lender: I'm inside the Memo!");
@@ -36,7 +35,7 @@ export default function GetLender(props) {
           if (isMounted) {
             let userInfo = data;
             setUser(userInfo);
-            localStorage.setItem('user', JSON.stringify(userInfo))
+            localStorage.setItem("user", JSON.stringify(userInfo));
             console.log("Lend: fetched userInfo= ", userInfo);
             console.log("user= ", userInfo);
             console.log("user.lender= ", userInfo.lender);
@@ -54,13 +53,13 @@ export default function GetLender(props) {
     console.log("user.lender= ", user.lender);
     console.log("user.lender.id= ", user.lender.id);
   }
-  
+
   const changeAddMode = (e) => {
     e.preventDefault();
-    setAddMode(!addMode)
-  }
-    
-  console.log('addMode= ', addMode)
+    setAddMode(!addMode);
+  };
+
+  console.log("addMode= ", addMode);
   return (
     <>
       <div className="card col-8 mx-auto">

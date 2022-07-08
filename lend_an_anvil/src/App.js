@@ -9,6 +9,7 @@ import Lend from './views/Lend';
 import SingleTool from "./views/SingleTool";
 import Borrow from './views/Borrow';
 import MyReserves from "./components/MyReserves";
+import UserProfile from "./views/UserProfile";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -29,11 +30,11 @@ function App() {
   };
   
     const logUserOut = () => {
-    console.log('logUserOut has been called')
+      console.log('logUserOut has been called')
+      localStorage.removeItem("token");
+      localStorage.removeItem("current_user");
+      localStorage.removeItem("user");
     flashMessage("You have successfully logged out", "warning");
-    localStorage.removeItem("token");
-    localStorage.removeItem('current_user');
-    localStorage.removeItem('user');
     setLoggedIn(false);
   };
 
@@ -99,6 +100,7 @@ function App() {
             element={
               <Home
                 flashMessage={flashMessage}
+                logUserIn={logUserIn}
                 loggedIn={loggedIn}
                 user={user}
                 getCurrentUser={getCurrentUser}
@@ -138,7 +140,17 @@ function App() {
             }
           ></Route>
           <Route
-            path="/modify/<:toolId>"
+            path="/users/profile"
+            element={
+              <UserProfile
+                flashMessage={flashMessage}
+                user={user}
+                getCurrentUser={getCurrentUser}
+              />
+            }
+          ></Route>
+          <Route
+            path="/modify/:toolId"
             element={
               <SingleTool
                 flashMessage={flashMessage}

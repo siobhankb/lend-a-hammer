@@ -5,10 +5,12 @@
 // My Tools - only if USER = LENDER
 
 import React from "react";
-import { Link } from "react-router-dom";
-import UserProfile from "./UserProfile";
+import { Link, useParams } from "react-router-dom";
+import UserProfile from "../views/UserProfile";
 
 export default function Nav(props) {
+  const params = useParams();
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
@@ -30,7 +32,13 @@ export default function Nav(props) {
           <div className="navbar-nav ms-right">
             {props.loggedIn ? (
               <>
-                <Link className="nav-link" to="/profile">
+                <Link className="nav-link" to="/lend">
+                  Lend
+                </Link>
+                <Link className="nav-link" to="/borrow">
+                  Borrow
+                </Link>
+                <Link className="nav-link" to={"/profile"}>
                   Profile
                 </Link>
                 <Link className="nav-link" to="/" onClick={props.logUserOut}>

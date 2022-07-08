@@ -18,11 +18,7 @@ export default function Lend(props) {
   return (
     <>
       <div className="container">
-        <h4 className="text-center">This is a lender page</h4>
-        <div className="row">
-          this will be a table of tools
-          {/* <MyTools user={user} lenderID={props.lenderID} /> */}
-        </div>
+        <h4 className="mt-3 text-center">Lender Info</h4>
         <div className="row">
           <GetLender flashMessage={props.flashMessage} userID={localStorage.getItem('user_id')}
           />

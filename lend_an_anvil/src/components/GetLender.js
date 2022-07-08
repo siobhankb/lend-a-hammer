@@ -37,6 +37,7 @@ export default function GetLender(props) {
           if (isMounted) {
             let userInfo = data;
             setUser(userInfo);
+            localStorage.setItem('user', JSON.stringify(userInfo))
             console.log("Lend: fetched userInfo= ", userInfo);
             console.log("user= ", userInfo);
             console.log("user.lender= ", userInfo.lender);

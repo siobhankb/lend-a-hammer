@@ -6,7 +6,7 @@ import Home from './views/Home';
 import Register from './views/Register';
 import Login from './views/Login';
 import Lend from './views/Lend';
-import MyTools from "./components/MyTools";
+import SingleTool from "./views/SingleTool";
 import Borrow from './views/Borrow';
 import MyReserves from "./components/MyReserves";
 
@@ -45,6 +45,7 @@ function App() {
       userHeaders.append("Authorization", `Bearer ${userToken}`);
 
       if (userToken) {
+        let isMounted = true;
         // get user from token
         fetch("http://127.0.0.1:5000/user-info", {
           method: "GET",
@@ -60,54 +61,20 @@ function App() {
           })
           .then((data) => {
             if (data) {
-              let currentUser = data;
-              getCurrentUser(currentUser);
+              if (isMounted) {
+                let currentUser = data;
+                getCurrentUser(currentUser);
+                localStorage.setItem("user", JSON.stringify(currentUser));
+              }
             }
           });
+        return () =>  { isMounted = false }
       }
+    } else {
+      setCurrentUser(user);
+      localStorage.setItem("user", JSON.stringify(user));
     }
-  
 }
-
-  const getUser = (d) => {
-    setCurrentUser(d);
-    localStorage.setItem('current_user', JSON.stringify(d))
-    return d
-  }
-  // useEffect(() => {
-  //   let userToken = localStorage.getItem("token");
-  //   let userHeaders = new Headers();
-  //   userHeaders.append("Content-Type", "application/json");
-  //   userHeaders.append("Authorization", `Bearer ${userToken}`);
-
-  //   if (userToken) {
-  //     // get user from token
-  //     fetch("http://127.0.0.1:5000/user-info", {
-  //       method: "GET",
-  //       headers: userHeaders,
-  //     })
-  //       .then((res) => {
-  //         if (res.ok) {
-  //           console.log("Lend res=ok");
-  //           return res.json();
-  //         } else {
-  //           flashMessage("LEND: unable to retrieve user info", "danger");
-  //         }
-  //       })
-  //       .then((data) => {
-  //         if (data) {
-  //           let currentUser = data;
-  //           getUser(currentUser);
-  //         }
-  //       });
-  //   }
-    
-  // }, [user]);
-
-  // const getUser = (d) => {
-  //   setUser(d);
-  // };
-
   return (
     <>
       <Nav
@@ -164,6 +131,16 @@ function App() {
             path="/lend"
             element={
               <Lend
+                flashMessage={flashMessage}
+                user={user}
+                getCurrentUser={getCurrentUser}
+              />
+            }
+          ></Route>
+          <Route
+            path="/modify/<:toolId>"
+            element={
+              <SingleTool
                 flashMessage={flashMessage}
                 user={user}
                 getCurrentUser={getCurrentUser}

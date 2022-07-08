@@ -8,25 +8,32 @@ import { Link } from 'react-router-dom';
 import ToolRow from './ToolRow'
 
 export default function MyTools(props) {
-  const [user, setUser] = useState(props.user);
-  const [lenderID, setLenderID] = useState(props.lenderID);
-  const [addMode, setAddMode] = useState(false);
-  const [myTools, setMyTools] = useState([]);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [lenderID, setLenderID] = useState(0);
+  const [myTools, setMyTools] = useState('');
+  const [myToolList, setMyToolList] = useState([]);
   const toolHeaders = [
     "Available",
     "Tool Name",
     "Tool Description",
     "Category",
   ];
-  console.log("myTools lenderID =", props.lenderID);
-  console.log('myTools tools =', props.tools);
-  let myToolList = Object.keys(props.tools)
-  console.log('myToolList = ', myToolList)
+  if (user) {
+  console.log("myTools lenderID =", user.lender.id);
+  console.log("myTools tools =", myTools);
+  setLenderID(user.lender.id);
+  } else {
+    let currentUser = JSON.parse(localStorage.getItem("user"));
+    setUser(currentUser);
+    setLenderID(currentUser.lender.id);
+}
+
 
   // get lender's tools
   useMemo(() => {
     let isMounted = true;
     let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json')
     myHeaders.append(
       "Authorization",
       `Bearer ${localStorage.getItem("token")}`
@@ -39,10 +46,10 @@ export default function MyTools(props) {
     })
       .then((res) => {
         if (res.ok) {
-          console.log("GetLender fetch myTools: res=ok");
+          console.log("MyTools fetch: res=ok");
           return res.json();
         } else {
-          console.log("GetLender fetch myTools res= NOT ok");
+          console.log("MyTools fetch: res= NOT ok");
         }
       })
       .then((data) => {
@@ -52,7 +59,7 @@ export default function MyTools(props) {
             setMyTools(tools);
           }
         } else {
-          console.log("no -Get lender- tools data");
+          console.log("no data from -MyTools-");
         }
       })
       .catch((error) => console.log("error", error));
@@ -62,8 +69,19 @@ export default function MyTools(props) {
   }, []);
 
   if (myTools) {
-    console.log("GetLender tools = ", myTools);
-    localStorage.setItem("my_tools", myTools);
+    console.log("MyTools tools = ", myTools);
+    localStorage.setItem("my_tools", JSON.stringify(myTools));
+    getToolList();
+  } else {
+    let currentUserTools = JSON.parse(localStorage.getItem('my_tools'))
+    setMyTools(currentUserTools);
+    getToolList();
+    console.log("MyTools currentUserTools = ", currentUserTools);
+  }
+
+  const getToolList = () => {
+    let myToolList = Object.keys(myTools)
+    setMyToolList(myToolList)
   }
 
   return (
@@ -78,7 +96,7 @@ export default function MyTools(props) {
         </thead>
         <tbody>
           {myToolList.map((t) => {
-            <ToolRow toolName={t} myTools={props.tools} />;
+            <ToolRow toolName={t} myTools={myTools} />;
           })}
         </tbody>
       </table>

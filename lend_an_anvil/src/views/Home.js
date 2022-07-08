@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import BorrowerButton from "../components/BorrowerButton";
 import GetBorrower from "../components/GetBorrower";
 import GetLender from "../components/GetLender";
+import Login from "./Login";
 
 export default function Home(props) {
   const [userToken, setUserToken] = useState(localStorage.getItem('token'));
@@ -85,8 +86,8 @@ export default function Home(props) {
     console.log('no user yet');
   }
   
-  return (user ? (
-  <>
+  return user ? (
+    <>
       <div className="container">
         <div className="row">
           <h2 className="text-center">Home - Lend a Hammer</h2>
@@ -123,12 +124,12 @@ export default function Home(props) {
           </div>
           <div className="col">
             <BorrowerButton checkBorrower={checkBorrower} />
-            <GetBorrower
-              user={user}
-              borrowerID={borrowerID}
-            />
+            <GetBorrower user={user} borrowerID={borrowerID} />
           </div>
         </div>
       </div>
-    </>) : (<h1>no user</h1>))
+    </>
+  ) : (
+    <Login flashMessage={props.flashMessage} logUserIn={props.logUserIn} />
+  );
 }

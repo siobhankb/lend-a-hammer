@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import CategoryList from './CategoryList';
 
 export default function AddToolForm(props) {
+  const [newTool, setNewTool] = useState();
+  const form = useRef(null);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -33,12 +35,14 @@ export default function AddToolForm(props) {
               props.flashMessage(data.error, "danger");
             } else {
               let t = data
-              props.flashMessage(`You have added ${data.tool_name} to your lending list!`, 'success');
+              setNewTool(t)
+              props.flashMessage(`You have added ${t.tool_name} to your lending list!`, 'success');
               console.log(t)
             }
           })
           .catch((error) => console.log("error", error));
-    }
+          form.current.reset()
+    };
 
   return (
     <>
@@ -49,7 +53,7 @@ export default function AddToolForm(props) {
               {" "}
               Add a New Tool to Lend{" "}
             </h4>
-            <form onSubmit={handleFormSubmit} className="form-control my-3">
+            <form ref={form} onSubmit={handleFormSubmit} className="form-control my-3">
               <div className="mb-3 row mt-2">
                 <label htmlFor="toolName" className="col-sm-3 col-form-label">
                   Tool Name:
@@ -87,14 +91,14 @@ export default function AddToolForm(props) {
                     name="toolCat"
                   />
                   {/* <CategoryList /> */}
-                  <div id="LOBSelect" class="clearfix displayOnCreate">
+                  {/* <div id="LOBSelect" class="clearfix displayOnCreate">
                     <span class="label">Dropdown</span>
                     <select
                       name="head-select"
                       class="dk"
                       id="lobSelect"
                     ></select>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="card-footer text-center">

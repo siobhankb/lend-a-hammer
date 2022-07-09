@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Alert from './components/Alert';
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Nav from './components/Nav';
-import Home from './views/Home';
+import Home2 from './views/Home2';
 import Register from './views/Register';
 import Login from './views/Login';
 import Lend from './views/Lend';
@@ -39,7 +39,7 @@ function App() {
   };
 
   const getCurrentUser = () => {
-    if (!user) {
+    if (loggedIn == true) {
       let userToken = localStorage.getItem("token");
       let userHeaders = new Headers();
       userHeaders.append("Content-Type", "application/json");
@@ -69,12 +69,12 @@ function App() {
               }
             }
           });
-        return () =>  { isMounted = false }
+        return () => {
+          isMounted = false;
+        };
       }
-    } else {
-      setCurrentUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
     }
+      
 }
   return (
     <>
@@ -98,7 +98,7 @@ function App() {
           <Route
             path="/"
             element={
-              <Home
+              <Home2
                 flashMessage={flashMessage}
                 logUserIn={logUserIn}
                 loggedIn={loggedIn}
@@ -116,7 +116,11 @@ function App() {
           <Route
             path="/login"
             element={
-              <Login flashMessage={flashMessage} logUserIn={logUserIn} />
+              <Login
+                flashMessage={flashMessage}
+                logUserIn={logUserIn}
+                getCurrentUser={getCurrentUser}
+              />
             }
           />
           <Route

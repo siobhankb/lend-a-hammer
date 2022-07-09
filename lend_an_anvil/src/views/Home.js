@@ -11,7 +11,7 @@ import GetLender from "../components/GetLender";
 import Login from "./Login";
 
 export default function Home(props) {
-  const [userToken, setUserToken] = useState(localStorage.getItem('token'));
+  const [userToken, setUserToken] = useState('');
   const [user, setUser] = useState();
   const [borrowerID, setBorrowerID] = useState();
 
@@ -23,7 +23,7 @@ export default function Home(props) {
     `Bearer ${userToken}`
   );
 
-  useMemo(() => {
+  useEffect(() => {
     let isMounted = true;
     console.log("Home: I'm inside the Memo!")
     fetch("http://127.0.0.1:5000/user-info", {

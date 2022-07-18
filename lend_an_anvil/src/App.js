@@ -10,6 +10,7 @@ import SingleTool from "./views/SingleTool";
 import Borrow from './views/Borrow';
 import MyReserves from "./components/MyReserves";
 import UserProfile from "./views/UserProfile";
+import CategoryList from "./components/CategoryList";
 
 function App() {
   const [message, setMessage] = useState(null);
@@ -57,7 +58,7 @@ function App() {
               console.log("Lend res=ok");
               return res.json();
             } else {
-              flashMessage("🔨 Please sign in 🔨", "warning");
+              console.log('App: No user logged in...')
             }
           })
           .then((data) => {
@@ -159,6 +160,7 @@ function App() {
               />
             }
           ></Route>
+          <Route path="/categories" element={<CategoryList flashMessage={flashMessage} user={user} getCurrentUser={getCurrentUser} />} > </Route>
         </Routes>
       </div>
     </>

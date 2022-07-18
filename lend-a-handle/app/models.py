@@ -42,14 +42,14 @@ class User(UserMixin, db.Model):
             'last_name': self.last_name,
             'zip_code': self.zip_code
         }
-        user_lender = Lender.query.filter(Lender.user_id == str(self.id)).first()
+        user_lender = Lender.query.filter(Lender.user_id == int(self.id)).first()
         if user_lender:
             lend_dict = user_lender.to_dict()
             data['lender'] = lend_dict
         else:
             data['lender'] = {}
         user_borrower = Borrower.query.filter(
-            Borrower.user_id == str(self.id)).first()
+            Borrower.user_id == int(self.id)).first()
         if user_borrower:
             borrow_dict = user_borrower.to_dict()
             data['borrower'] = borrow_dict

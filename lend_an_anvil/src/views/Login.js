@@ -25,11 +25,12 @@ export default function Login(props) {
       headers: myHeaders,
     })
       .then((res) => {
-        if (res.ok) {
+        if (res.ok == false) {
+          console.log("Login: res NOT ok");
+          props.flashMessage("🔨 Incorrect email/password 🔨", "danger");
+        } else {
           console.log("res=ok");
           return res.json();
-        } else {
-          props.flashMessage("Incorrect email/password", "danger");
         }
       })
       .then((data) => {

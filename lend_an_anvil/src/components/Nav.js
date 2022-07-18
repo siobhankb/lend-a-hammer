@@ -48,6 +48,9 @@ export default function Nav(props) {
                 Login
               </Link>
             )}
+            <Link className="nav-link" to="/categories">
+              Tool Categories
+            </Link>
           </div>
           <div className="navbar-nav">
             {/* {props.isLender ? ( */}

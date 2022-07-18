@@ -15,17 +15,16 @@ export default function Home(props) {
   const [user, setUser] = useState();
   const [borrowerID, setBorrowerID] = useState();
 
-  console.log('Home Page userToken= ', userToken)
-  let userHeaders = new Headers();
-  userHeaders.append("Content-Type", "application/json");
-  userHeaders.append(
-    "Authorization",
-    `Bearer ${userToken}`
-  );
+  const flashMessage = props.flashMessage
 
-  useMemo(() => {
+  useEffect(() => {
+    console.log("Home Page userToken= ", userToken);
+    let userHeaders = new Headers();
+    userHeaders.append("Content-Type", "application/json");
+    userHeaders.append("Authorization", `Bearer ${userToken}`);
+
     let isMounted = true;
-    console.log("Home: I'm inside the Memo!")
+    console.log("Home: I'm inside the Memo!");
     fetch("http://127.0.0.1:5000/user-info", {
       method: "GET",
       headers: userHeaders,
@@ -35,7 +34,7 @@ export default function Home(props) {
           console.log("Home res=ok");
           return res.json();
         } else {
-          props.flashMessage("🔨 Please sign in 🔨", "warning");
+          console.log('Home Page: No user found')
         }
       })
       .then((data) => {
@@ -47,8 +46,10 @@ export default function Home(props) {
           }
         }
       });
-    return () => { isMounted = false }
-  }, []);
+    return () => {
+      isMounted = false;
+    };
+  }, [userToken, flashMessage]);
 
   const checkBorrower = () => {
     if (user.borrower === {}) {
